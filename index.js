@@ -49,6 +49,27 @@ app.get("/tasks/:id",async(req,res)=>{
   const result = await tasksCollection.findOne(query)
   res.send(result)
 })
+app.get("/tasks/user/:email", async(req,res)=>{
+  const userEmail = req.params.email
+  const result = await tasksCollection.find({userEmail}).toArray()
+  res.send(result)
+})
+app.delete("/tasks/:id", async (req,res)=>{
+  const id = req.params.id
+  const query = {_id : new ObjectId(id)}
+  const result = await tasksCollection.deleteOne(query)
+  res.send(result)
+})
+app.put("/tasks/:id",async(req,res)=>{
+  const id = req.params.id
+  const filter = {_id : new ObjectId(id)}
+  const updateUser = req.body
+  const updateDoc = {
+    $set:updateUser
+  }
+  const result = await tasksCollection.updateOne(filter,updateDoc)
+  res.send(result)
+})
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
