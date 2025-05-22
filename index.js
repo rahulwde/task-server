@@ -7,7 +7,7 @@ const port = process.env.PORT || 5000
 app.use(cors())
 app.use(express.json())
 app.get("/",(req,res)=>{
-  res.send("coffee is hotter")
+  res.send("task is hotter")
 })
 
 
@@ -27,7 +27,7 @@ async function run() {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
     const tasksCollection = client.db("tasksDb").collection("tasks")
-    const userCollection = client.db("tasksDb").collection("users")
+  
 
     app.post("/tasks", async(req,res)=>{
       const newTasks = req.body
@@ -42,10 +42,18 @@ async function run() {
   const result = await tasksCollection.find().toArray();
   res.send(result);
 });
-app.get("/users",async(req,res)=>{
-  const userProfile = req.body
-  const result = await userCollection.insertOne(userProfile)
-  res.send(result )
+//  app.get("/tasks/:id", async(req,res)=>{
+//   const id = req.params.id
+//   const query = {_id : new Object(id)}
+//   console.log(id)
+//   const result = await tasksCollection.findOne(query)
+//   res.send(result)
+//  })
+app.get("/tasks/:id",async(req,res)=>{
+  const id = req.params.id
+  const query = {_id : new Object(id)}
+  const result = await tasksCollection.findOne(query)
+  res.send(result)
 })
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
@@ -58,6 +66,6 @@ app.get("/users",async(req,res)=>{
 run().catch(console.dir);
 
 app.listen(port, ()=>{
-  console.log("coffe is server")
+  console.log("task is server")
 })
 // 9NKytzzhQGqeivCE
