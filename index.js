@@ -1,4 +1,4 @@
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const express = require("express")
 const cors = require("cors")
 require("dotenv").config()
@@ -34,24 +34,18 @@ async function run() {
       const result = await tasksCollection.insertOne(newTasks)
       res.send(result)
     })
-    app.get("/tasks", async(req,res)=>{
-      const result = await tasksCollection.find().limit(6).toArray()
+    app.get("/featured-tasks", async(req,res)=>{
+      const result = await tasksCollection.find().limit(6).sort({ deadline: 1 }).toArray()
       res.send(result)
     })
     app.get('/tasks', async (req, res) => {
   const result = await tasksCollection.find().toArray();
   res.send(result);
 });
-//  app.get("/tasks/:id", async(req,res)=>{
-//   const id = req.params.id
-//   const query = {_id : new Object(id)}
-//   console.log(id)
-//   const result = await tasksCollection.findOne(query)
-//   res.send(result)
-//  })
+ 
 app.get("/tasks/:id",async(req,res)=>{
   const id = req.params.id
-  const query = {_id : new Object(id)}
+  const query = {_id : new ObjectId(id)}
   const result = await tasksCollection.findOne(query)
   res.send(result)
 })
