@@ -70,6 +70,20 @@ app.put("/tasks/:id",async(req,res)=>{
   const result = await tasksCollection.updateOne(filter,updateDoc)
   res.send(result)
 })
+app.patch("/tasks/bid/:id", async(req,res)=>{
+  const id = req.params.id
+  const query = {_id : new ObjectId(id)}
+  const bidUpdate = {
+    $inc:{bids:1}
+  }
+  const result = await tasksCollection.updateOne(query ,bidUpdate)
+  res.send(result)
+})
+app.get("/tasks", async (req, res) => {
+  const email = req.query.email;  
+  const result = await tasksCollection.find({ userEmail: email }).toArray();
+  res.send(result);
+});
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
