@@ -84,6 +84,21 @@ app.get("/tasks", async (req, res) => {
   const result = await tasksCollection.find({ userEmail: email }).toArray();
   res.send(result);
 });
+app.get("/task/stats", async (req, res) => {
+  try {
+    const total = await tasksCollection.countDocuments(); // সঠিকভাবে ফিল্টারও নিতে পারে
+    res.send({ total });
+  } catch (error) {
+    console.error("Error fetching stats:", error);
+    res.status(500).send({ error: "Failed to get stats" });
+  }
+});
+
+app.get("/tasks/user/:email", async (req, res) => {
+  const result = await tasksCollection.find({ userEmail: req.params.email }).toArray();
+  res.send(result);
+});
+
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
@@ -97,4 +112,3 @@ run().catch(console.dir);
 app.listen(port, ()=>{
   console.log("task is server")
 })
-// 9NKytzzhQGqeivCE
